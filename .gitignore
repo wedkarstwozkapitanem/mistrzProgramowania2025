@@ -1,2 +1,7 @@
 
 /0/.vscode
+1/test.in
+3/a.out
+2/test.in
+*.in
+*.out
