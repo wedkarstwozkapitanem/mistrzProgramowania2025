@@ -9,9 +9,9 @@
 #include<unordered_set>
 
 
-bool podzielNaKawalki(const long long aktualny,const std::vector<long long> &liczby,const long long j,const long long n) {
+bool podzielNaKawalki(const long long &aktualny,const std::vector<long long> &liczby,const long long &j,const long long &n, std::vector<long long> &wynik) {
+    wynik.clear();
     long long sum = 0;
-    std::vector<long long> wynik;
     wynik.push_back(j);
     for (auto i = j; i < n; ++i) {
         sum += liczby[i];
@@ -43,6 +43,14 @@ int main() {
         return 0;
     }
 
+    if(n==2) {
+        long long a,b;std::cin >> a >> b;
+        if(a==b) std::cout << "Tak\n2\n1 2"; 
+        else std::cout << "Nie";
+        return 0;
+    }
+
+
     std::vector<long long> liczby(n);
     long long suma = 0;
     
@@ -51,11 +59,11 @@ int main() {
         suma += liczby[i];
     }
 
-    
 
+    std::vector<long long> wynik;
+    wynik.reserve(500'000);
     long long aktualnaSuma{};
     if(suma == 0) {
-        std::vector<long long> wynik; 
         for(auto i = 0;i<n;++i) {
             aktualnaSuma += liczby[i];
             if(aktualnaSuma == 0) wynik.push_back(i+1);
@@ -73,12 +81,11 @@ int main() {
     for(int i{};i<n;++i) {
         aktualnaSuma += liczby[i];
         if(odwiedzone.find(aktualnaSuma) == odwiedzone.end()) {
-            if(aktualnaSuma != 0 && suma % aktualnaSuma == 0 && podzielNaKawalki(aktualnaSuma,liczby,i+1,n))  return 0;
+            if(aktualnaSuma != 0 && suma % aktualnaSuma == 0 && podzielNaKawalki(aktualnaSuma,liczby,i+1,n,wynik))  return 0;
             odwiedzone.insert(aktualnaSuma);
         } 
     }
    
-    if(podzielNaKawalki(0,liczby,1,n))  return 0;
     std::cout << "Nie\n";
 
     return 0;
