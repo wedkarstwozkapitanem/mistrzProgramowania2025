@@ -1,5 +1,5 @@
 /*
-*    nazwa: Bajtocja Entertainmen
+*    nazwa: Bajtocja Entertainment
 *    autor: Dominik Łempicki Kapitan
 */
 
