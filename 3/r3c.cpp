@@ -40,14 +40,14 @@ int main() {
     long long n; std::cin >> n;
     if (n < 1) { 
         std::cout << "Nie";
-        return 0;
+        return EXIT_FAILURE;
     }
 
     if(n==2) {
         long long a,b;std::cin >> a >> b;
         if(a==b) std::cout << "Tak\n2\n1 2"; 
         else std::cout << "Nie";
-        return 0;
+        return EXIT_SUCCESS;
     }
 
 
@@ -74,7 +74,7 @@ int main() {
             return 0;
         }
         std::cout << "Nie\n";
-        return 0;
+        return EXIT_SUCCESS;
     }
 
     std::unordered_set<long long> odwiedzone;
@@ -88,5 +88,5 @@ int main() {
    
     std::cout << "Nie\n";
 
-    return 0;
+    return EXIT_SUCCESS;
 }
