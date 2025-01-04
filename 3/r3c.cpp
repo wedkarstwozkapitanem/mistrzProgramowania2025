@@ -1,90 +1,85 @@
 /*
-*    nazwa: Bajtocja Entertainment
+*    nazwa: Bajtocja Entertainmen
 *    autor: Dominik Łempicki Kapitan
 */
-
 
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include<queue>
+#include<unordered_set>
 
 
-std::priority_queue<long long> dzielnik(const std::vector<long long> &liczby,const long long &suma){
-    std::priority_queue<long long> dzielniki;
-    long long sumaAk{};
-    for(const auto &i : liczby) {
-        sumaAk += i;
-        if(sumaAk != 0 && (suma%sumaAk)==0) {
-            dzielniki.push(sumaAk);
-            dzielniki.push(-sumaAk);
-        }
-   }
-
-    dzielniki.push(1);
-    dzielniki.push(-1);
-    dzielniki.push(suma);
-    dzielniki.push(-suma);
-    dzielniki.push(0);
-    return dzielniki;
-}
-
-
-bool dzielNaFragmenty(const std::vector<long long> &liczby,const long long suma,const long long n) {
-    auto dzielniki = dzielnik(liczby,suma);
-    while(!dzielniki.empty()) {
-        const long long aktualny = dzielniki.top();
-        dzielniki.pop();
-        long long sum = 0;
-        std::vector<int> wynik;
-
-        for (int i = 0; i < n; ++i) {
-            sum += liczby[i];
-            if (sum == aktualny) {
+bool podzielNaKawalki(const long long aktualny,const std::vector<long long> &liczby,const long long j,const long long n) {
+    long long sum = 0;
+    std::vector<long long> wynik;
+    wynik.push_back(j);
+    for (auto i = j; i < n; ++i) {
+        sum += liczby[i];
+        if(sum == 0 && aktualny != 0) {
+            if(!wynik.empty()) {
+                wynik.pop_back();
                 wynik.push_back(i + 1);
-                sum = 0; 
             }
         }
-        
-        if (sum == 0 && wynik.size() >= 2 && wynik[wynik.size()-1]==n) {
-            std::cout << "Tak\n" << wynik.size() << '\n';
-            for (int i = 0; i < wynik.size(); ++i) std::cout << wynik[i] << ' ';
-            return true;
+        if (sum == aktualny) {
+            wynik.push_back(i + 1);
+            sum = 0; 
         }
+    }
+
+    if (wynik.size() >= 2 && wynik[wynik.size()-1] == n) {
+        std::cout << "Tak\n" << wynik.size() << '\n';
+        for (const auto &i : wynik) std::cout << i << ' ';
+        return true;
     }
     return false;
 }
 
 int main() {
-    std::ios_base::sync_with_stdio(0), std::cin.tie(0);
-    int n; 
-    std::cin >> n;
+    std::ios_base::sync_with_stdio(false), std::cin.tie(nullptr);
+    long long n; std::cin >> n;
     if (n < 1) { 
-        std::cout << "NIE\n";
+        std::cout << "Nie";
         return 0;
     }
 
     std::vector<long long> liczby(n);
     long long suma = 0;
-
-
-    for (int i = 0; i < n; ++i) {
+    
+    for (auto i = 0; i < n; ++i) {
         std::cin >> liczby[i];
         suma += liczby[i];
     }
 
-    if(!dzielNaFragmenty(liczby,suma,n)) std::cout << "Nie\n";
+    
+
+    long long aktualnaSuma{};
+    if(suma == 0) {
+        std::vector<long long> wynik; 
+        for(auto i = 0;i<n;++i) {
+            aktualnaSuma += liczby[i];
+            if(aktualnaSuma == 0) wynik.push_back(i+1);
+        }
+        if (wynik.size() >= 2 && wynik[wynik.size()-1] == n) {
+            std::cout << "Tak\n" << wynik.size() << '\n';
+            for (const auto &i : wynik) std::cout << i << ' ';
+            return 0;
+        }
+        std::cout << "Nie\n";
+        return 0;
+    }
+
+    std::unordered_set<long long> odwiedzone;
+    for(int i{};i<n;++i) {
+        aktualnaSuma += liczby[i];
+        if(odwiedzone.find(aktualnaSuma) == odwiedzone.end()) {
+            if(aktualnaSuma != 0 && suma % aktualnaSuma == 0 && podzielNaKawalki(aktualnaSuma,liczby,i+1,n))  return 0;
+            odwiedzone.insert(aktualnaSuma);
+        } 
+    }
+   
+    if(podzielNaKawalki(0,liczby,1,n))  return 0;
+    std::cout << "Nie\n";
+
     return 0;
 }
-
-
-   /* for (long long i = 1; i * i <= std::abs(suma); ++i) {
-        if (suma % i == 0) {
-            dzielniki.push_back(i);
-            dzielniki.push_back(-i);
-            if (i != suma / i) {
-                dzielniki.push_back(suma / i); 
-                dzielniki.push_back(-(suma/i));
-            }
-        }
-    }*/
