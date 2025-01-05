@@ -1,3 +1,4 @@
+
 /*
 *    nazwa: Szyfr
 *    autor: Dominik Łempicki Kapitan
