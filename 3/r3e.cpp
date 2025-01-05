@@ -1,3 +1,4 @@
+
 /*
 *    nazwa: Komputer w domu
 *    autor: Dominik Łempicki Kapitan
