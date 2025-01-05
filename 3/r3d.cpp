@@ -3,71 +3,43 @@
 *    autor: Dominik Łempicki Kapitan
 */
 
-
-#include <iostream>
-#include <vector>
-#include <bitset>
-#include <algorithm>
-#include <limits>
-#include <unordered_set>
-
-
-inline std::string usunWiodaceZera(const std::string& binarna) {
-    size_t pierwszaJedynka = binarna.find_first_not_of('0');
-    return (pierwszaJedynka == std::string::npos) ? "0" : binarna.substr(pierwszaJedynka);
-}
-
-inline long long obliczXor(long long a, long long b) {
-    return a ^ b;
-}
+#include<iostream>
+#include<vector>
+#include<unordered_set>
+#include<limits>
 
 int main() {
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(nullptr);
-
-    int n;
+    
+    unsigned long long n;
     std::cin >> n;
-
+    
     std::vector<long long> zaszyfrowane(n), klucz(n);
+    for(auto &i : zaszyfrowane) std::cin >> i;
+    for(auto &i : klucz) std::cin >> i;
+
+    std::unordered_set<long long> odwiedzone;
     
-    for (int i = 0; i < n; ++i) std::cin >> zaszyfrowane[i];
-    
-
-
-    for (int i = 0; i < n; ++i) std::cin >> klucz[i];
-    
-
-    std::vector<bool> użyteKlucze(n, false);
-    std::vector<long long> wynik(n); 
-
-
-    std::vector<std::pair<long long, int>> sortowaneKlucze;
-    for (int i = 0; i < n; ++i) sortowaneKlucze.push_back({klucz[i], i});
-    
-
-    std::sort(sortowaneKlucze.begin(), sortowaneKlucze.end());
-
-    for (int i = 0; i < n; ++i) {
-        long long najlepszyWynik = std::numeric_limits<long long>::max();
-        int najlepszyIndex = -1;
-
-        for (int j = 0; j < n; ++j) {
-            if (użyteKlucze[j]) continue; 
+    for(auto i = 0; i < n; ++i) {
+        long long min_wartosc = std::numeric_limits<long long>::max();
+        long long najlepszy_klucz = -1;
+        
+        for(auto j = 0; j < n; ++j) {
+            if(odwiedzone.find(j) != odwiedzone.end()) continue;
             
-            long long terazniejszyWynik = obliczXor(zaszyfrowane[i], klucz[j]);
-            
-            if (terazniejszyWynik < najlepszyWynik) {
-                najlepszyWynik = terazniejszyWynik;
-                najlepszyIndex = j;
+            long long aktualny = zaszyfrowane[i] ^ klucz[j];
+            if(aktualny < min_wartosc) {
+                min_wartosc = aktualny;
+                najlepszy_klucz = j;
             }
         }
         
-        wynik[i] = najlepszyWynik;
-        użyteKlucze[najlepszyIndex] = true; 
+        zaszyfrowane[i] = min_wartosc;
+        odwiedzone.insert(najlepszy_klucz);
     }
 
-    for (int i = 0; i < n; ++i) std::cout << wynik[i] << (i < n - 1 ? ' ' : '\n');
+    for(const auto &i : zaszyfrowane) std::cout << i << ' ';
     
-
     return 0;
 }
