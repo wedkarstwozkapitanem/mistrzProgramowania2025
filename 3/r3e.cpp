@@ -1,82 +1,65 @@
 /*
-*    nazwa: Szyfr
+*    nazwa: Komputer w domu
 *    autor: Dominik Łempicki Kapitan
 */
 
 #include <iostream>
 #include <vector>
-#include <limits>
-#include <bitset>
-
-class DrzewoTrie {
-public:
-    struct Węzeł {
-        Węzeł* dzieci[2] = {nullptr, nullptr};
-        int liczba = 0;
-    };
-
-    DrzewoTrie() : korzeń(new Węzeł()) {}
-
-    void wstaw(long long liczba) {
-        Węzeł* obecny = korzeń;
-        for (int i = 63; i >= 0; --i) {
-            int bit = (liczba >> i) & 1;
-            if (!obecny->dzieci[bit]) {
-                obecny->dzieci[bit] = new Węzeł();
-            }
-            obecny = obecny->dzieci[bit];
-            obecny->liczba++;
-        }
-    }
-
-    void usuń(long long liczba) {
-        Węzeł* obecny = korzeń;
-        for (int i = 63; i >= 0; --i) {
-            int bit = (liczba >> i) & 1;
-            obecny = obecny->dzieci[bit];
-            obecny->liczba--;
-        }
-    }
-
-    long long znajdźMinimalnyXOR(long long liczba) {
-        Węzeł* obecny = korzeń;
-        long long wynik = 0;
-        for (int i = 63; i >= 0; --i) {
-            int bit = (liczba >> i) & 1;
-            if (obecny->dzieci[bit] && obecny->dzieci[bit]->liczba > 0) {
-                obecny = obecny->dzieci[bit];
-            } else {
-                wynik |= (1LL << i);
-                obecny = obecny->dzieci[1 - bit];
-            }
-        }
-        return wynik;
-    }
-
-private:
-    Węzeł* korzeń;
-};
+#include <queue>
+#include <climits>
 
 int main() {
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(nullptr);
-
-    unsigned long long n;
-    std::cin >> n;
-
-    std::vector<long long> zaszyfrowane(n), klucz(n);
-    for (size_t i = 0; i < n; ++i)  std::cin >> zaszyfrowane[i];
+    
+    long long n, m;
+    std::cin >> n >> m;
+    
+    if (n < 1 || n > 20 || m < 0 || m > 20) return 1;
     
 
-    for (size_t i = 0; i < n; ++i) std::cin >> klucz[i];
-    
-    DrzewoTrie trie;
-    for (const auto& k : klucz) trie.wstaw(k);
+    if(n == 1) {
+        std::cout << "1\n1\n0\n";
+        return 0;
+    } else if(n == 2) {
+        long long a, b;
+        std::cin >> a >> b;
+        std::cout << "2\n1\n" << -a << ' ' << b;
+        return 0;
+    }
 
-    for (const auto& z : zaszyfrowane) {
-        long long minxor = trie.znajdźMinimalnyXOR(z);
-        trie.usuń(z ^ minxor);
-        std::cout << minxor << ' ';
+    std::vector<std::vector<int>> graf(n + 1);
+    for (int i = 0; i < m; ++i) {
+        int u, v;
+        std::cin >> u >> v;
+        if (u >= 1 && u <= n && v >= 1 && v <= n) graf[u].push_back(v);
+    }
+
+    std::cout << n << "\n";
+
+    const int maks_wartosc = 1000000;
+    std::vector<std::vector<int>> stany(n + 1, std::vector<int>(n, 0));
+    for (int i = 1; i <= n; ++i) {
+        stany[i][i - 1] = std::min(i, maks_wartosc);
+        for (int j = 0; j < n; ++j) std::cout << stany[i][j] << " ";
+        std::cout << "\n";
+    }
+
+    std::vector<std::vector<int>> instrukcje;
+    for (int u = 1; u <= n; ++u) {
+        for (int v : graf[u]) {
+            std::vector<int> instrukcja(n);
+            for (int i = 0; i < n; ++i) instrukcja[i] = stany[v][i] - stany[u][i];
+            instrukcje.push_back(instrukcja);
+        }
+    }
+
+    if (instrukcje.size() > 60) return 1;
+
+    std::cout << instrukcje.size() << "\n";
+    for (const auto& i : instrukcje) {
+        for (int j : i) std::cout << j << " ";
+        std::cout << "\n";
     }
 
     return 0;
