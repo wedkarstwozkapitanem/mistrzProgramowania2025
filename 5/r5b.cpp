@@ -18,9 +18,11 @@ int main() {
         if(a >= b)  wynik = a;
         else wynik = a + 1;
 
-        if(wynik == 10) wynik = 1; 
-
-        for(unsigned long long i{};i<liczba.size();++i) std::cout << wynik;
+        if(wynik == 10) {
+            wynik = 1;
+            std::cout << 1; 
+        }
+        for(size_t i{};i<liczba.size();++i) std::cout << wynik;
     }
 
     return EXIT_SUCCESS;
