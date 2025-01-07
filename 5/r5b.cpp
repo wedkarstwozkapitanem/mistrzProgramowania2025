@@ -12,17 +12,26 @@ int main() {
 
     if(liczba.size()==1) std::cout << liczba << '\n';
     else {
-        int a = liczba[0] - '0';
-        int b = liczba[1] - '0';
+
         int wynik{};
+ 
+        int i{};
+        while (i + 1 < liczba.size() && liczba[i] == liczba[i+1]) ++i;
+        
+        
+        int a = liczba[i] - '0';
+        int b = liczba[i+1] - '0';
+
         if(a >= b)  wynik = a;
         else wynik = a + 1;
 
-        if(wynik == 10) {
+
+        if(wynik < 10) liczba = std::string(liczba.size(),char(wynik + '0'));
+        else {
             wynik = 1;
-            std::cout << 1; 
+            liczba = std::string(liczba.size()+1,1);
         }
-        for(size_t i{};i<liczba.size();++i) std::cout << wynik;
+        std::cout << liczba << '\n';
     }
 
     return EXIT_SUCCESS;
