@@ -1,3 +1,4 @@
+
 /*
 *    nazwa: Dylatacja++
 *    autor: Dominik Łempicki Kapitan
