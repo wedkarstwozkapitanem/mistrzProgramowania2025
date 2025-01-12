@@ -5,3 +5,4 @@
 2/test.in
 *.in
 *.out
+/4/.vscode
