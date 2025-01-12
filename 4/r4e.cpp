@@ -1,7 +1,9 @@
+
 /*
 *    nazwa: Bajtex S.A.
 *    autor: Dominik Łempicki Kapitan
 */
+
 #include "fastio.h"
 #include <iostream>
 #include <vector>
