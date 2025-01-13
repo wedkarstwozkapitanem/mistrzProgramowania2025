@@ -1,4 +1,3 @@
-
 /*
 *    nazwa: Dylatacja++
 *    autor: Dominik Łempicki Kapitan
@@ -7,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <unordered_map>
 
 int main() {
     std::ios_base::sync_with_stdio(false);
@@ -40,36 +40,63 @@ int main() {
 
     int p;
     std::cin >> p;
-    std::vector<int> pierwszyWiersz(p);
     int maxDlugosc = 0;
     
+    bool takieSame{true};
+    int ostatnia{};
+    bool sameJedynki{true};
+
+    bool pwiekszeodjeden = p <= 1;
+
+    std::unordered_map<int,int> krance;
+
     for (int i = 0; i < p; i++) {
-        std::cin >> pierwszyWiersz[i];
-        maxDlugosc += pierwszyWiersz[i];
+        int tmp{};
+        std::cin >> tmp;
+        maxDlugosc += tmp;
+        ++krance[maxDlugosc];
+        if(i==0) ostatnia = tmp;
+        else if(takieSame && ostatnia == tmp) ostatnia = tmp;
+        else takieSame = false;
+        if(tmp > 1) sameJedynki = false;
     }
     
-    std::vector<int> krance(maxDlugosc + 1, 0);
+    
     
 
     int koniec = 0;
-    for (int j = 0; j < p-1; j++) {
-        koniec += pierwszyWiersz[j];
-        krance[koniec]++;
-    }
+   
     
-
     for (int i = 1; i < n; i++) {
         std::cin >> p;
         koniec = 0;
+        if(p>1) pwiekszeodjeden = false;
         
         for (int j = 1; j <= p; j++) {
             int dl;
             std::cin >> dl;
             koniec += dl;
             if (j != p) krance[koniec]++;
+
+            if(dl > 1) sameJedynki = false;
+            if(takieSame && ostatnia == dl) ostatnia = dl;
+            else takieSame = false;
         }
     }
     
+
+    if(sameJedynki){
+        std::cout << "0 0\n";
+        return 0;
+    }
+
+    if(takieSame) {
+        if(!pwiekszeodjeden) std::cout << 0 << ' ' << n << '\n';
+        else std::cout << n << ' ' << n << '\n';
+        return 0;
+    }
+    
+
     int minPaneli = n;
     int maxPaneli = 0;
     
